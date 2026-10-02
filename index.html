@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0b0d10" />
+  <title>نموذج معلومات الهوية البصرية</title>
+
+  <style>
+    :root{
+      --bg:#080a0d;
+      --surface:#101318;
+      --surface-2:#151922;
+      --border:#272c37;
+      --text:#f5f7fa;
+      --muted:#9ea6b4;
+      --accent:#d8b36a;
+      --accent-2:#f0d79e;
+      --danger:#ff6b6b;
+      --success:#61d19a;
+      --shadow:0 18px 55px rgba(0,0,0,.35);
+      --radius:20px;
+    }
+
+    *{box-sizing:border-box}
+
+    html{scroll-behavior:smooth}
+
+    body{
+      margin:0;
+      background:
+        radial-gradient(circle at 15% 5%, rgba(216,179,106,.08), transparent 25%),
+        radial-gradient(circle at 85% 10%, rgba(216,179,106,.05), transparent 22%),
+        var(--bg);
+      color:var(--text);
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;
+      line-height:1.65;
+      min-height:100vh;
+    }
+
+    button,input,textarea,select{font:inherit}
+
+    .container{
+      width:min(980px, calc(100% - 28px));
+      margin:0 auto;
+      padding:28px 0 46px;
+    }
+
+    .hero{
+      background:linear-gradient(145deg, rgba(216,179,106,.12), rgba(255,255,255,.02));
+      border:1px solid rgba(216,179,106,.20);
+      border-radius:28px;
+      padding:28px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+
+    .eyebrow{
+      color:var(--accent-2);
+      font-size:.86rem;
+      font-weight:800;
+      letter-spacing:.04em;
+      margin-bottom:8px;
+    }
+
+    h1{
+      margin:0 0 8px;
+      font-size:clamp(1.55rem, 4vw, 2.3rem);
+      line-height:1.25;
+    }
+
+    .hero p{
+      margin:0;
+      color:var(--muted);
+      max-width:760px;
+    }
+
+    .progress-wrap{
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter:blur(14px);
+      background:rgba(8,10,13,.82);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px 14px;
+      margin-bottom:18px;
+    }
+
+    .progress-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:8px;
+      font-size:.9rem;
+    }
+
+    .progress-top span:last-child{
+      color:var(--accent-2);
+      font-weight:800;
+    }
+
+    .bar{
+      height:8px;
+      background:#222733;
+      border-radius:99px;
+      overflow:hidden;
+    }
+
+    .bar-fill{
+      height:100%;
+      width:0;
+      border-radius:inherit;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      transition:width .25s ease;
+    }
+
+    .step{
+      display:none;
+      background:rgba(16,19,24,.94);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:var(--shadow);
+    }
+
+    .step.active{
+      display:block;
+      animation:fadeIn .2s ease;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:.2;transform:translateY(5px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    .step-head{
+      margin-bottom:20px;
+    }
+
+    .step-no{
+      color:var(--accent);
+      font-weight:800;
+      font-size:.85rem;
+      margin-bottom:4px;
+    }
+
+    .step h2{
+      margin:0 0 5px;
+      font-size:1.35rem;
+    }
+
+    .step-desc{
+      margin:0;
+      color:var(--muted);
+      font-size:.92rem;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:15px;
+    }
+
+    .full{grid-column:1/-1}
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:7px;
+    }
+
+    label{
+      font-weight:750;
+      font-size:.94rem;
+    }
+
+    .hint{
+      color:var(--muted);
+      font-size:.78rem;
+      font-weight:500;
+    }
+
+    input,textarea,select{
+      width:100%;
+      border:1px solid var(--border);
+      background:var(--surface-2);
+      color:var(--text);
+      border-radius:13px;
+      outline:none;
+      padding:12px 13px;
+      transition:border-color .2s, box-shadow .2s, background .2s;
+    }
+
+    input,select{min-height:48px}
+
+    textarea{
+      min-height:120px;
+      resize:vertical;
+    }
+
+    input::placeholder,textarea::placeholder{color:#737b89}
+
+    input:focus,textarea:focus,select:focus{
+      border-color:rgba(216,179,106,.85);
+      box-shadow:0 0 0 3px rgba(216,179,106,.10);
+    }
+
+    .choice-group{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .choice-group.three{
+      grid-template-columns:repeat(3,minmax(0,1fr));
+    }
+
+    .choice{
+      position:relative;
+    }
+
+    .choice input{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    .choice label{
+      min-height:48px;
+      display:flex;
+      align-items:center;
+      gap:9px;
+      border:1px solid var(--border);
+      background:var(--surface-2);
+      border-radius:13px;
+      padding:10px 12px;
+      cursor:pointer;
+      color:#dce1e8;
+      transition:.2s ease;
+      font-weight:650;
+    }
+
+    .choice label::before{
+      content:"";
+      width:18px;
+      height:18px;
+      border:1.5px solid #5b6370;
+      border-radius:50%;
+      flex:none;
+    }
+
+    .choice input[type="checkbox"] + label::before{
+      border-radius:6px;
+    }
+
+    .choice input:checked + label{
+      border-color:rgba(216,179,106,.75);
+      background:rgba(216,179,106,.10);
+      color:var(--accent-2);
+    }
+
+    .choice input:checked + label::before{
+      border-color:var(--accent);
+      background:var(--accent);
+      box-shadow:inset 0 0 0 4px var(--surface-2);
+    }
+
+    .choice input:focus-visible + label{
+      outline:2px solid var(--accent);
+      outline-offset:2px;
+    }
+
+    .section-note{
+      background:#0c1015;
+      border:1px dashed #303746;
+      padding:12px 13px;
+      border-radius:13px;
+      color:#aeb6c2;
+      font-size:.84rem;
+      margin-top:3px;
+    }
+
+    .error{
+      display:none;
+      color:var(--danger);
+      font-size:.78rem;
+      margin-top:-1px;
+    }
+
+    .has-error input,
+    .has-error textarea,
+    .has-error select{
+      border-color:rgba(255,107,107,.75);
+    }
+
+    .has-error .error{display:block}
+
+    .group-error{
+      display:none;
+      color:var(--danger);
+      font-size:.8rem;
+      margin-top:5px;
+    }
+
+    .group-wrap.invalid .choice label{
+      border-color:rgba(255,107,107,.55);
+    }
+
+    .group-wrap.invalid .group-error{display:block}
+
+    .nav{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      margin-top:22px;
+      padding-top:16px;
+      border-top:1px solid var(--border);
+    }
+
+    .btn{
+      border:none;
+      border-radius:13px;
+      min-height:48px;
+      padding:11px 18px;
+      cursor:pointer;
+      font-weight:850;
+      transition:transform .15s ease, opacity .15s ease, background .2s;
+    }
+
+    .btn:active{transform:translateY(1px)}
+
+    .btn-primary{
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      color:#15120c;
+    }
+
+    .btn-secondary{
+      background:#222733;
+      color:#eef1f5;
+      border:1px solid #303746;
+    }
+
+    .btn-primary:hover,.btn-secondary:hover{opacity:.92}
+
+    .review{
+      background:#0c1015;
+      border:1px solid var(--border);
+      border-radius:15px;
+      padding:15px;
+      max-height:440px;
+      overflow:auto;
+    }
+
+    .review-section{
+      margin-bottom:16px;
+    }
+
+    .review-section:last-child{margin-bottom:0}
+
+    .review-section h3{
+      color:var(--accent-2);
+      margin:0 0 7px;
+      font-size:.95rem;
+    }
+
+    .review-item{
+      padding:7px 0;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      font-size:.86rem;
+    }
+
+    .review-item:last-child{border-bottom:none}
+
+    .review-q{
+      color:#97a0ae;
+      margin-bottom:2px;
+      font-weight:700;
+    }
+
+    .review-a{
+      color:#f2f4f7;
+      word-break:break-word;
+      white-space:pre-wrap;
+    }
+
+    .success-box{
+      display:none;
+      border:1px solid rgba(97,209,154,.35);
+      background:rgba(97,209,154,.08);
+      color:#d9faea;
+      border-radius:15px;
+      padding:13px;
+      margin-top:15px;
+      font-size:.9rem;
+    }
+
+    .footer-note{
+      text-align:center;
+      color:#747d8b;
+      font-size:.78rem;
+      margin-top:18px;
+    }
+
+    .required{
+      color:var(--accent);
+      margin-right:3px;
+    }
+
+    .chip-note{
+      display:inline-block;
+      padding:4px 8px;
+      border-radius:999px;
+      background:#1a202a;
+      color:#b8c0cc;
+      font-size:.73rem;
+      margin-top:4px;
+    }
+
+    @media (max-width:720px){
+      .container{
+        width:min(100% - 16px, 980px);
+        padding-top:10px;
+      }
+
+      .hero{
+        padding:21px 17px;
+        border-radius:22px;
+      }
+
+      .step{
+        padding:16px 14px;
+        border-radius:18px;
+      }
+
+      .grid,
+      .choice-group,
+      .choice-group.three{
+        grid-template-columns:1fr;
+      }
+
+      .full{grid-column:auto}
+
+      .progress-wrap{
+        border-radius:13px;
+        padding:10px 11px;
+      }
+
+      .nav{
+        position:sticky;
+        bottom:8px;
+        z-index:10;
+        background:rgba(8,10,13,.88);
+        backdrop-filter:blur(12px);
+        margin-left:-2px;
+        margin-right:-2px;
+        padding:10px;
+        border:1px solid var(--border);
+        border-radius:14px;
+      }
+
+      .btn{
+        flex:1;
+        min-height:50px;
+      }
+
+      textarea{min-height:105px}
+      #successBox > div:last-child{grid-template-columns:1fr !important;}
+      #successBox button{width:100%;}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *{
+        scroll-behavior:auto !important;
+        animation:none !important;
+        transition:none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <section class="hero">
+      <div class="eyebrow">BRAND INFORMATION FORM</div>
+      <h1>نموذج جمع معلومات الهوية البصرية</h1>
+      <p>
+        يرجى تعبئة جميع الحقول بدقة. المعلومات المرسلة ستكون المرجع الأساسي لفهم المشروع
+        وتحديد اتجاه الهوية البصرية ونطاق العمل قبل البدء بالتنفيذ.
+      </p>
+      <div class="chip-note">جميع الحقول مطلوبة</div>
+    </section>
+
+    <div class="progress-wrap" aria-live="polite">
+      <div class="progress-top">
+        <span id="progressTitle">القسم 1 من 13</span>
+        <span id="progressPercent">0%</span>
+      </div>
+      <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+    </div>
+
+    <form id="brandForm" novalidate>
+
+      <!-- 1 -->
+      <section class="step active" data-step="1">
+        <div class="step-head">
+          <div class="step-no">01</div>
+          <h2>المعلومات الأساسية</h2>
+          <p class="step-desc">معلومات التعريف بالمشروع أو العلامة.</p>
+        </div>
+
+        <div class="grid">
+          <div class="field">
+            <label for="projectName">اسم المشروع / العلامة <span class="required">*</span></label>
+            <input id="projectName" name="projectName" required placeholder="اكتب الاسم النهائي كما تريد ظهوره" />
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field">
+            <label for="activity">مجال النشاط <span class="required">*</span></label>
+            <input id="activity" name="activity" required placeholder="مثال: مطعم، متجر، شركة، خدمة، مشروع شخصي..." />
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field">
+            <label for="nameMeaning">هل للاسم معنى أو قصة؟ <span class="required">*</span></label>
+            <textarea id="nameMeaning" name="nameMeaning" required placeholder="اكتب القصة أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field">
+            <label for="location">الموقع / المنطقة <span class="required">*</span></label>
+            <input id="location" name="location" required placeholder="المدينة والمنطقة أو نطاق العمل" />
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field">
+            <label for="established">تاريخ التأسيس <span class="required">*</span></label>
+            <input id="established" name="established" required placeholder="مثال: 2024 أو لا يوجد" />
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field">
+            <label for="branches">عدد الفروع / الفروع الحالية <span class="required">*</span></label>
+            <input id="branches" name="branches" required placeholder="مثال: فرع واحد / 3 فروع / لا يوجد" />
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field full">
+            <label for="contactSocial">بيانات التواصل والحسابات الحالية <span class="required">*</span></label>
+            <textarea id="contactSocial" name="contactSocial" required placeholder="رقم التواصل + Instagram + Facebook + TikTok + الموقع الإلكتروني... أو اكتب لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+        </div>
+
+        <div class="nav">
+          <span></span>
+          <button type="button" class="btn btn-primary next">التالي</button>
+        </div>
+      </section>
+
+      <!-- 2 -->
+      <section class="step" data-step="2">
+        <div class="step-head">
+          <div class="step-no">02</div>
+          <h2>فكرة المشروع والبراند</h2>
+          <p class="step-desc">لنحدد الشخصية والانطباع الذي يجب أن تعكسه الهوية.</p>
+        </div>
+
+        <div class="grid">
+          <div class="field full">
+            <label for="descriptionWords">صف المشروع بثلاث إلى خمس كلمات <span class="required">*</span></label>
+            <input id="descriptionWords" name="descriptionWords" required placeholder="مثال: راقٍ، عصري، هادئ، فاخر..." />
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field full">
+            <label for="differentiator">ما الذي يميز المشروع عن المنافسين؟ <span class="required">*</span></label>
+            <textarea id="differentiator" name="differentiator" required></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field full group-wrap" data-required-group="feelings">
+            <label>ما الإحساس الذي تريد أن يصل للعميل؟ <span class="required">*</span></label>
+            <div class="choice-group">
+              <div class="choice"><input type="checkbox" name="feelings" value="فخم" id="f1"><label for="f1">فخم</label></div>
+              <div class="choice"><input type="checkbox" name="feelings" value="راقي" id="f2"><label for="f2">راقي</label></div>
+              <div class="choice"><input type="checkbox" name="feelings" value="مريح" id="f3"><label for="f3">مريح</label></div>
+              <div class="choice"><input type="checkbox" name="feelings" value="عصري" id="f4"><label for="f4">عصري</label></div>
+              <div class="choice"><input type="checkbox" name="feelings" value="شبابي" id="f5"><label for="f5">شبابي</label></div>
+              <div class="choice"><input type="checkbox" name="feelings" value="هادئ" id="f6"><label for="f6">هادئ</label></div>
+              <div class="choice"><input type="checkbox" name="feelings" value="فاخر" id="f7"><label for="f7">فاخر</label></div>
+              <div class="choice"><input type="checkbox" name="feelings" value="صيفي" id="f8"><label for="f8">صيفي</label></div>
+            </div>
+            <div class="field" style="margin-top:10px">
+              <input name="feelingsOther" required placeholder="إضافي / أو اكتب: لا يوجد" />
+            </div>
+            <div class="group-error">اختر إحساسًا واحدًا على الأقل، واكتب "لا يوجد" في خانة الإضافي إن لم يوجد.</div>
+          </div>
+
+          <div class="field full">
+            <label for="brandStory">هل هناك قصة أو فكرة أساسية وراء المشروع؟ <span class="required">*</span></label>
+            <textarea id="brandStory" name="brandStory" required placeholder="اكتب الفكرة بالتفصيل أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+        </div>
+
+        <div class="nav">
+          <button type="button" class="btn btn-secondary prev">السابق</button>
+          <button type="button" class="btn btn-primary next">التالي</button>
+        </div>
+      </section>
+
+      <!-- 3 -->
+      <section class="step" data-step="3">
+        <div class="step-head">
+          <div class="step-no">03</div>
+          <h2>الجمهور المستهدف</h2>
+          <p class="step-desc">حتى تكون اللغة البصرية مناسبة للفئة المقصودة.</p>
+        </div>
+
+        <div class="grid">
+          <div class="field full">
+            <label for="audience">من هو الجمهور الأساسي؟ <span class="required">*</span></label>
+            <textarea id="audience" name="audience" required placeholder="صف العميل المستهدف قدر الإمكان"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field">
+            <label for="age">الفئة العمرية التقريبية <span class="required">*</span></label>
+            <input id="age" name="age" required placeholder="مثال: 18–35" />
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field group-wrap" data-required-group="audienceType">
+            <label>الفئات الأساسية <span class="required">*</span></label>
+            <div class="choice-group">
+              <div class="choice"><input type="checkbox" name="audienceType" value="شباب" id="a1"><label for="a1">شباب</label></div>
+              <div class="choice"><input type="checkbox" name="audienceType" value="عائلات" id="a2"><label for="a2">عائلات</label></div>
+              <div class="choice"><input type="checkbox" name="audienceType" value="أزواج / ثنائيات" id="a3"><label for="a3">أزواج / ثنائيات</label></div>
+              <div class="choice"><input type="checkbox" name="audienceType" value="طلاب" id="a4"><label for="a4">طلاب</label></div>
+              <div class="choice"><input type="checkbox" name="audienceType" value="رجال أعمال" id="a5"><label for="a5">رجال أعمال</label></div>
+              <div class="choice"><input type="checkbox" name="audienceType" value="عام" id="a6"><label for="a6">جمهور عام</label></div>
+            </div>
+            <div class="group-error">اختر فئة واحدة على الأقل.</div>
+          </div>
+
+          <div class="field full">
+            <label for="marketLevel">كيف تريد أن يُنظر إلى مستوى المشروع؟ <span class="required">*</span></label>
+            <div class="choice-group three">
+              <div class="choice"><input type="radio" name="marketLevel" value="اقتصادي" id="m1" required><label for="m1">اقتصادي</label></div>
+              <div class="choice"><input type="radio" name="marketLevel" value="متوسط" id="m2"><label for="m2">متوسط</label></div>
+              <div class="choice"><input type="radio" name="marketLevel" value="Premium / مميز" id="m3"><label for="m3">Premium / مميز</label></div>
+              <div class="choice"><input type="radio" name="marketLevel" value="Luxury / فاخر" id="m4"><label for="m4">Luxury / فاخر</label></div>
+            </div>
+            <div class="error">اختر مستوى واحدًا.</div>
+          </div>
+        </div>
+
+        <div class="nav">
+          <button type="button" class="btn btn-secondary prev">السابق</button>
+          <button type="button" class="btn btn-primary next">التالي</button>
+        </div>
+      </section>
+
+      <!-- 4 -->
+      <section class="step" data-step="4">
+        <div class="step-head">
+          <div class="step-no">04</div>
+          <h2>الهوية الحالية</h2>
+          <p class="step-desc">نحدد ما الذي سيبقى وما الذي يحتاج إلى تغيير.</p>
+        </div>
+
+        <div class="grid">
+          <div class="field">
+            <label for="currentLogo">هل يوجد شعار حالي؟ <span class="required">*</span></label>
+            <textarea id="currentLogo" name="currentLogo" required placeholder="صفه أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field">
+            <label for="currentColors">هل توجد ألوان معتمدة حاليًا؟ <span class="required">*</span></label>
+            <textarea id="currentColors" name="currentColors" required placeholder="اذكر الألوان أو الأكواد أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field">
+            <label for="currentFonts">هل توجد خطوط معتمدة؟ <span class="required">*</span></label>
+            <textarea id="currentFonts" name="currentFonts" required placeholder="اذكرها أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field">
+            <label for="previousIdentity">هل توجد هوية بصرية سابقة؟ <span class="required">*</span></label>
+            <textarea id="previousIdentity" name="previousIdentity" required placeholder="اذكر ما هو متوفر أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field full">
+            <label for="keep">ما الذي تريد الحفاظ عليه؟ <span class="required">*</span></label>
+            <textarea id="keep" name="keep" required placeholder="اكتب العناصر التي لا تريد خسارتها أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field full">
+            <label for="change">ما الذي تريد تغييره بالكامل؟ <span class="required">*</span></label>
+            <textarea id="change" name="change" required placeholder="اكتب ما تريد تغييره أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+        </div>
+
+        <div class="nav">
+          <button type="button" class="btn btn-secondary prev">السابق</button>
+          <button type="button" class="btn btn-primary next">التالي</button>
+        </div>
+      </section>
+
+      <!-- 5 -->
+      <section class="step" data-step="5">
+        <div class="step-head">
+          <div class="step-no">05</div>
+          <h2>الاتجاه البصري</h2>
+          <p class="step-desc">نختار الاتجاه العام الذي يعبّر عن شخصية العلامة.</p>
+        </div>
+
+        <div class="grid">
+          <div class="field full group-wrap" data-required-group="visualStyle">
+            <label>ما الستايل الأقرب لرؤيتك؟ <span class="required">*</span></label>
+            <div class="choice-group">
+              <div class="choice"><input type="checkbox" name="visualStyle" value="Minimal" id="v1"><label for="v1">Minimal</label></div>
+              <div class="choice"><input type="checkbox" name="visualStyle" value="Luxury" id="v2"><label for="v2">Luxury</label></div>
+              <div class="choice"><input type="checkbox" name="visualStyle" value="Modern" id="v3"><label for="v3">Modern</label></div>
+              <div class="choice"><input type="checkbox" name="visualStyle" value="Elegant" id="v4"><label for="v4">Elegant</label></div>
+              <div class="choice"><input type="checkbox" name="visualStyle" value="Mediterranean" id="v5"><label for="v5">Mediterranean</label></div>
+              <div class="choice"><input type="checkbox" name="visualStyle" value="Vintage" id="v6"><label for="v6">Vintage</label></div>
+              <div class="choice"><input type="checkbox" name="visualStyle" value="Youthful" id="v7"><label for="v7">شبابي</label></div>
+            </div>
+            <div class="field" style="margin-top:10px">
+              <input name="visualStyleOther" required placeholder="ستايل آخر / أو اكتب: لا يوجد" />
+            </div>
+            <div class="group-error">اختر ستايلًا واحدًا على الأقل.</div>
+          </div>
+
+          <div class="field">
+            <label for="useColors">ألوان تحب استخدامها <span class="required">*</span></label>
+            <textarea id="useColors" name="useColors" required placeholder="اذكر الألوان أو الأكواد أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field">
+            <label for="avoidColors">ألوان لا تريد استخدامها <span class="required">*</span></label>
+            <textarea id="avoidColors" name="avoidColors" required placeholder="اذكرها أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field full">
+            <label for="references">براندات / تصاميم / حسابات تحب أسلوبها + روابط إن وجدت <span class="required">*</span></label>
+            <textarea id="references" name="references" required placeholder="اكتب أسماء أو روابط مرجعية، مع توضيح الشيء الذي أعجبك في كل مرجع، أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field full">
+            <label for="moodboard">رابط Moodboard أو Pinterest / Drive إن وجد <span class="required">*</span></label>
+            <input id="moodboard" name="moodboard" required placeholder="ضع الرابط أو اكتب: لا يوجد" />
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+        </div>
+
+        <div class="nav">
+          <button type="button" class="btn btn-secondary prev">السابق</button>
+          <button type="button" class="btn btn-primary next">التالي</button>
+        </div>
+      </section>
+
+      <!-- 6 -->
+      <section class="step" data-step="6">
+        <div class="step-head">
+          <div class="step-no">06</div>
+          <h2>الشعار Logo</h2>
+          <p class="step-desc">تفاصيل خاصة بالعلامة والشعار المطلوب.</p>
+        </div>
+
+        <div class="grid">
+          <div class="field full">
+            <label>ما المطلوب للشعار؟ <span class="required">*</span></label>
+            <div class="choice-group">
+              <div class="choice"><input type="radio" name="logoAction" value="تصميم شعار جديد بالكامل" id="l1" required><label for="l1">تصميم جديد بالكامل</label></div>
+              <div class="choice"><input type="radio" name="logoAction" value="تطوير الشعار الحالي" id="l2"><label for="l2">تطوير الشعار الحالي</label></div>
+            </div>
+            <div class="error">اختر خيارًا واحدًا.</div>
+          </div>
+
+          <div class="field full group-wrap" data-required-group="logoType">
+            <label>ما النمط المفضل للشعار؟ <span class="required">*</span></label>
+            <div class="choice-group">
+              <div class="choice"><input type="checkbox" name="logoType" value="Typography" id="lt1"><label for="lt1">Typography</label></div>
+              <div class="choice"><input type="checkbox" name="logoType" value="Symbol" id="lt2"><label for="lt2">Symbol</label></div>
+              <div class="choice"><input type="checkbox" name="logoType" value="Monogram" id="lt3"><label for="lt3">Monogram</label></div>
+              <div class="choice"><input type="checkbox" name="logoType" value="Combination Mark" id="lt4"><label for="lt4">Combination Mark</label></div>
+            </div>
+            <div class="group-error">اختر نمطًا واحدًا على الأقل.</div>
+          </div>
+
+          <div class="field">
+            <label for="logoElement">هل يوجد رمز / عنصر معين يجب ربطه بالشعار؟ <span class="required">*</span></label>
+            <textarea id="logoElement" name="logoElement" required placeholder="صف الفكرة أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field">
+            <label for="arabicLogo">هل تحتاج نسخة عربية من الاسم؟ <span class="required">*</span></label>
+            <input id="arabicLogo" name="arabicLogo" required placeholder="نعم / لا / اكتب التفاصيل" />
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field full">
+            <label for="logoVersions">هل تحتاج نسخًا متعددة للشعار؟ <span class="required">*</span></label>
+            <textarea id="logoVersions" name="logoVersions" required placeholder="مثال: أفقي، عمودي، أيقونة، نسخة أحادية اللون... أو اكتب لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+        </div>
+
+        <div class="nav">
+          <button type="button" class="btn btn-secondary prev">السابق</button>
+          <button type="button" class="btn btn-primary next">التالي</button>
+        </div>
+      </section>
+
+      <!-- 7 -->
+      <section class="step" data-step="7">
+        <div class="step-head">
+          <div class="step-no">07</div>
+          <h2>تطبيقات الهوية</h2>
+          <p class="step-desc">حدد كل التطبيقات التي تريد إدراجها ضمن نطاق المشروع.</p>
+        </div>
+
+        <div class="group-wrap" data-required-group="applications">
+          <div class="choice-group">
+            <div class="choice"><input type="checkbox" name="applications" value="Logo" id="p1"><label for="p1">Logo</label></div>
+            <div class="choice"><input type="checkbox" name="applications" value="ألوان الهوية" id="p2"><label for="p2">ألوان الهوية</label></div>
+            <div class="choice"><input type="checkbox" name="applications" value="الخطوط Typography" id="p3"><label for="p3">الخطوط Typography</label></div>
+            <div class="choice"><input type="checkbox" name="applications" value="Brand Pattern" id="p4"><label for="p4">Brand Pattern</label></div>
+            <div class="choice"><input type="checkbox" name="applications" value="Business Card" id="p5"><label for="p5">Business Card</label></div>
+            <div class="choice"><input type="checkbox" name="applications" value="Menu" id="p6"><label for="p6">Menu</label></div>
+            <div class="choice"><input type="checkbox" name="applications" value="كوب / عبوة" id="p7"><label for="p7">كوب / عبوة</label></div>
+            <div class="choice"><input type="checkbox" name="applications" value="Packaging" id="p8"><label for="p8">Packaging</label></div>
+            <div class="choice"><input type="checkbox" name="applications" value="Uniform" id="p9"><label for="p9">Uniform</label></div>
+            <div class="choice"><input type="checkbox" name="applications" value="Signage / واجهة" id="p10"><label for="p10">Signage / واجهة</label></div>
+            <div class="choice"><input type="checkbox" name="applications" value="Social Media Templates" id="p11"><label for="p11">Social Media Templates</label></div>
+            <div class="choice"><input type="checkbox" name="applications" value="Instagram Profile" id="p12"><label for="p12">Instagram Profile</label></div>
+            <div class="choice"><input type="checkbox" name="applications" value="Stories" id="p13"><label for="p13">Stories</label></div>
+            <div class="choice"><input type="checkbox" name="applications" value="Highlight Covers" id="p14"><label for="p14">Highlight Covers</label></div>
+            <div class="choice"><input type="checkbox" name="applications" value="بوستات إعلانية" id="p15"><label for="p15">بوستات إعلانية</label></div>
+            <div class="choice"><input type="checkbox" name="applications" value="Stickers" id="p16"><label for="p16">Stickers</label></div>
+            <div class="choice"><input type="checkbox" name="applications" value="أكياس / علب طلبات خارجية" id="p17"><label for="p17">أكياس / علب طلبات</label></div>
+            <div class="choice"><input type="checkbox" name="applications" value="Loyalty Card" id="p18"><label for="p18">Loyalty Card</label></div>
+          </div>
+          <div class="field" style="margin-top:10px">
+            <input name="applicationsOther" required placeholder="تطبيقات أخرى / أو اكتب: لا يوجد" />
+          </div>
+          <div class="group-error">اختر تطبيقًا واحدًا على الأقل.</div>
+        </div>
+
+        <div class="section-note">
+          سيتم إرسال الاختيارات ضمن الرسالة إلى واتساب بنفس ترتيب النموذج.
+        </div>
+
+        <div class="nav">
+          <button type="button" class="btn btn-secondary prev">السابق</button>
+          <button type="button" class="btn btn-primary next">التالي</button>
+        </div>
+      </section>
+
+      <!-- 8 -->
+      <section class="step" data-step="8">
+        <div class="step-head">
+          <div class="step-no">08</div>
+          <h2>السوشال ميديا</h2>
+          <p class="step-desc">نحدد إن كانت الهوية ستحتاج امتدادًا رقميًا متكاملًا.</p>
+        </div>
+
+        <div class="grid">
+          <div class="field">
+            <label for="socialIdentity">هل المطلوب هوية عامة فقط أم تشمل Instagram؟ <span class="required">*</span></label>
+            <input id="socialIdentity" name="socialIdentity" required placeholder="مثال: تشمل Instagram بالكامل" />
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field">
+            <label for="postTemplates">عدد قوالب البوست المطلوبة <span class="required">*</span></label>
+            <input id="postTemplates" name="postTemplates" required placeholder="مثال: 6 أو لا يوجد" />
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field">
+            <label for="storyTemplates">عدد قوالب الـ Story المطلوبة <span class="required">*</span></label>
+            <input id="storyTemplates" name="storyTemplates" required placeholder="مثال: 8 أو لا يوجد" />
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field">
+            <label for="highlights">أغلفة Highlights <span class="required">*</span></label>
+            <input id="highlights" name="highlights" required placeholder="عدد الأغلفة أو لا يوجد" />
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field full">
+            <label for="socialStyle">هل تريد أسلوبًا موحدًا للتصوير والتصميم والمحتوى؟ <span class="required">*</span></label>
+            <textarea id="socialStyle" name="socialStyle" required placeholder="صف المطلوب أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+        </div>
+
+        <div class="nav">
+          <button type="button" class="btn btn-secondary prev">السابق</button>
+          <button type="button" class="btn btn-primary next">التالي</button>
+        </div>
+      </section>
+
+      <!-- 9 -->
+      <section class="step" data-step="9">
+        <div class="step-head">
+          <div class="step-no">09</div>
+          <h2>المواد والملفات المتوفرة</h2>
+          <p class="step-desc">اذكر ما سيتم توفيره لك أثناء تنفيذ المشروع.</p>
+        </div>
+
+        <div class="grid">
+          <div class="field full">
+            <label for="availableLogo">ملفات الشعار المتوفرة <span class="required">*</span></label>
+            <textarea id="availableLogo" name="availableLogo" required placeholder="مثال: PNG / JPG / AI / PSD أو لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field">
+            <label for="availablePhotos">صور المشروع / المنتجات <span class="required">*</span></label>
+            <textarea id="availablePhotos" name="availablePhotos" required placeholder="اذكر الموجود أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field">
+            <label for="availableMenu">المنيو / الأسعار / المحتوى <span class="required">*</span></label>
+            <textarea id="availableMenu" name="availableMenu" required placeholder="اذكر الموجود أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field">
+            <label for="availablePackaging">صور أو مقاسات التغليف والطباعة <span class="required">*</span></label>
+            <textarea id="availablePackaging" name="availablePackaging" required placeholder="اذكر الموجود أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field">
+            <label for="availableOther">أي ملفات أخرى <span class="required">*</span></label>
+            <textarea id="availableOther" name="availableOther" required placeholder="اذكرها أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+        </div>
+
+        <div class="section-note">
+          الملفات نفسها لا تُرسل من داخل هذا النموذج؛ سيتم ذكر ما هو متوفر، ويمكن إرسال الملفات المرجعية لاحقًا في المحادثة عند الحاجة.
+        </div>
+
+        <div class="nav">
+          <button type="button" class="btn btn-secondary prev">السابق</button>
+          <button type="button" class="btn btn-primary next">التالي</button>
+        </div>
+      </section>
+
+      <!-- 10 -->
+      <section class="step" data-step="10">
+        <div class="step-head">
+          <div class="step-no">10</div>
+          <h2>المنافسون والمراجع</h2>
+          <p class="step-desc">لنعرف البيئة البصرية المحيطة بالمشروع وما الذي يجب تجنبه أو التميز عنه.</p>
+        </div>
+
+        <div class="grid">
+          <div class="field full">
+            <label for="competitors">أهم المنافسين <span class="required">*</span></label>
+            <textarea id="competitors" name="competitors" required placeholder="أسماء المنافسين + الروابط إن وجدت، أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field full">
+            <label for="competitorLikes">هل هناك منافسون تعجبك هويتهم؟ وما الذي أعجبك؟ <span class="required">*</span></label>
+            <textarea id="competitorLikes" name="competitorLikes" required placeholder="اشرح أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field full">
+            <label for="competitorAvoid">هل هناك أساليب أو هويات لا تريد أن تشبهها؟ <span class="required">*</span></label>
+            <textarea id="competitorAvoid" name="competitorAvoid" required placeholder="اشرح أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+        </div>
+
+        <div class="nav">
+          <button type="button" class="btn btn-secondary prev">السابق</button>
+          <button type="button" class="btn btn-primary next">التالي</button>
+        </div>
+      </section>
+
+      <!-- 11 -->
+      <section class="step" data-step="11">
+        <div class="step-head">
+          <div class="step-no">11</div>
+          <h2>هدف الهوية الجديدة</h2>
+          <p class="step-desc">ما السبب والنتيجة التي تتوقعها من المشروع؟</p>
+        </div>
+
+        <div class="group-wrap" data-required-group="goal">
+          <div class="choice-group">
+            <div class="choice"><input type="checkbox" name="goal" value="إطلاق المشروع بشكل جديد" id="g1"><label for="g1">إطلاق المشروع بشكل جديد</label></div>
+            <div class="choice"><input type="checkbox" name="goal" value="رفع مستوى البراند بصريًا" id="g2"><label for="g2">رفع المستوى البصري</label></div>
+            <div class="choice"><input type="checkbox" name="goal" value="جذب فئة جديدة" id="g3"><label for="g3">جذب فئة جديدة</label></div>
+            <div class="choice"><input type="checkbox" name="goal" value="توحيد شكل جميع التطبيقات" id="g4"><label for="g4">توحيد التطبيقات</label></div>
+            <div class="choice"><input type="checkbox" name="goal" value="تحسين شكل Instagram" id="g5"><label for="g5">تحسين Instagram</label></div>
+            <div class="choice"><input type="checkbox" name="goal" value="تمييز المشروع عن المنافسين" id="g6"><label for="g6">التميز عن المنافسين</label></div>
+          </div>
+          <div class="field" style="margin-top:10px">
+            <input name="goalOther" required placeholder="هدف إضافي / أو اكتب: لا يوجد" />
+          </div>
+          <div class="group-error">اختر هدفًا واحدًا على الأقل.</div>
+        </div>
+
+        <div class="grid" style="margin-top:15px">
+          <div class="field full">
+            <label for="successDefinition">متى تعتبر المشروع ناجحًا بالنسبة لك؟ <span class="required">*</span></label>
+            <textarea id="successDefinition" name="successDefinition" required placeholder="ما النتيجة التي تريد الوصول إليها؟"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+        </div>
+
+        <div class="nav">
+          <button type="button" class="btn btn-secondary prev">السابق</button>
+          <button type="button" class="btn btn-primary next">التالي</button>
+        </div>
+      </section>
+
+      <!-- 12 -->
+      <section class="step" data-step="12">
+        <div class="step-head">
+          <div class="step-no">12</div>
+          <h2>المدة والميزانية</h2>
+          <p class="step-desc">معلومات تساعد على تحديد نطاق التنفيذ بشكل واقعي.</p>
+        </div>
+
+        <div class="grid">
+          <div class="field">
+            <label for="deadline">موعد التسليم المطلوب <span class="required">*</span></label>
+            <input id="deadline" name="deadline" required placeholder="تاريخ محدد أو اكتب: مرن" />
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field">
+            <label for="budget">الميزانية التقريبية <span class="required">*</span></label>
+            <input id="budget" name="budget" required placeholder="يمكن كتابة نطاق أو: غير محددة" />
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field full">
+            <label for="scopePriority">ما الأولويات إذا كان نطاق العمل كبيرًا؟ <span class="required">*</span></label>
+            <textarea id="scopePriority" name="scopePriority" required placeholder="رتب الأشياء الأهم بالنسبة لك أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+        </div>
+
+        <div class="nav">
+          <button type="button" class="btn btn-secondary prev">السابق</button>
+          <button type="button" class="btn btn-primary next">التالي</button>
+        </div>
+      </section>
+
+      <!-- 13 -->
+      <section class="step" data-step="13">
+        <div class="step-head">
+          <div class="step-no">13</div>
+          <h2>ملاحظات واعتماد المعلومات</h2>
+          <p class="step-desc">آخر خطوة قبل إرسال النموذج إلى واتساب.</p>
+        </div>
+
+        <div class="grid">
+          <div class="field full">
+            <label for="extraNotes">أي فكرة أو تفصيل أو ملاحظة إضافية <span class="required">*</span></label>
+            <textarea id="extraNotes" name="extraNotes" required placeholder="اكتب أي ملاحظة إضافية أو اكتب: لا يوجد"></textarea>
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field full">
+            <label for="clientName">اسم الشخص الذي يعبئ النموذج <span class="required">*</span></label>
+            <input id="clientName" name="clientName" required placeholder="الاسم الكامل" />
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field full">
+            <label for="clientContact">رقم التواصل معك <span class="required">*</span></label>
+            <input id="clientContact" name="clientContact" required inputmode="tel" placeholder="رقم واتساب أو هاتف" />
+            <div class="error">هذا الحقل مطلوب.</div>
+          </div>
+
+          <div class="field full group-wrap" data-required-group="confirmation">
+            <div class="choice">
+              <input type="checkbox" name="confirmation" value="أوافق أن المعلومات أعلاه هي المعتمدة عند إعداد العرض الأولي وتنفيذ نطاق العمل المتفق عليه." id="confirm">
+              <label for="confirm">أؤكد أن المعلومات المدخلة دقيقة، وأن أي معلومات غير مذكورة في النموذج قد تحتاج إلى تحديد لاحق قبل اعتماد التنفيذ.</label>
+            </div>
+            <div class="group-error">يجب تأكيد القراءة قبل الإرسال.</div>
+          </div>
+        </div>
+
+        <div class="review" id="reviewBox"></div>
+
+        <div class="success-box" id="successBox">
+          تم تجهيز الرسالة بنجاح. سيتم فتح واتساب وإرسالها إلى جهة التواصل المحددة في النموذج.
+        </div>
+
+        <div class="nav">
+          <button type="button" class="btn btn-secondary prev">السابق</button>
+          <button type="submit" class="btn btn-primary" id="sendBtn">مراجعة وإرسال عبر واتساب</button>
+        </div>
+      </section>
+    </form>
+
+    <div class="footer-note">
+     فِداء مُحَيمِد | Fidaa Muhimed
+    </div>
+  </main>
+
+  <script>
+    (function(){
+      const form = document.getElementById('brandForm');
+      const steps = [...document.querySelectorAll('.step')];
+      const barFill = document.getElementById('barFill');
+      const progressTitle = document.getElementById('progressTitle');
+      const progressPercent = document.getElementById('progressPercent');
+      const reviewBox = document.getElementById('reviewBox');
+      const successBox = document.getElementById('successBox');
+      const sendBtn = document.getElementById('sendBtn');
+
+      const TOTAL = steps.length;
+      let current = 1;
+
+      const sections = [
+        { title:'المعلومات الأساسية', fields:[
+          ['اسم المشروع / العلامة','projectName'],
+          ['مجال النشاط','activity'],
+          ['هل للاسم معنى أو قصة؟','nameMeaning'],
+          ['الموقع / المنطقة','location'],
+          ['تاريخ التأسيس','established'],
+          ['عدد الفروع / الفروع الحالية','branches'],
+          ['بيانات التواصل والحسابات الحالية','contactSocial']
+        ]},
+        { title:'فكرة المشروع والبراند', fields:[
+          ['صف المشروع بثلاث إلى خمس كلمات','descriptionWords'],
+          ['ما الذي يميز المشروع عن المنافسين؟','differentiator'],
+          ['الإحساس المطلوب','feelings'],
+          ['إحساس إضافي','feelingsOther'],
+          ['القصة أو الفكرة الأساسية','brandStory']
+        ]},
+        { title:'الجمهور المستهدف', fields:[
+          ['الجمهور الأساسي','audience'],
+          ['الفئة العمرية','age'],
+          ['الفئات الأساسية','audienceType'],
+          ['مستوى المشروع','marketLevel']
+        ]},
+        { title:'الهوية الحالية', fields:[
+          ['الشعار الحالي','currentLogo'],
+          ['الألوان الحالية','currentColors'],
+          ['الخطوط الحالية','currentFonts'],
+          ['الهوية السابقة','previousIdentity'],
+          ['ما الذي تريد الحفاظ عليه؟','keep'],
+          ['ما الذي تريد تغييره؟','change']
+        ]},
+        { title:'الاتجاه البصري', fields:[
+          ['الستايل البصري','visualStyle'],
+          ['ستايل إضافي','visualStyleOther'],
+          ['ألوان تحب استخدامها','useColors'],
+          ['ألوان لا تريد استخدامها','avoidColors'],
+          ['المراجع والروابط','references'],
+          ['Moodboard / Pinterest / Drive','moodboard']
+        ]},
+        { title:'الشعار Logo', fields:[
+          ['المطلوب للشعار','logoAction'],
+          ['نمط الشعار','logoType'],
+          ['رمز أو عنصر مقترح','logoElement'],
+          ['نسخة عربية','arabicLogo'],
+          ['نسخ الشعار المطلوبة','logoVersions']
+        ]},
+        { title:'تطبيقات الهوية', fields:[
+          ['التطبيقات المطلوبة','applications'],
+          ['تطبيقات أخرى','applicationsOther']
+        ]},
+        { title:'السوشال ميديا', fields:[
+          ['نطاق الهوية الرقمية','socialIdentity'],
+          ['عدد قوالب البوست','postTemplates'],
+          ['عدد قوالب الـ Story','storyTemplates'],
+          ['أغلفة Highlights','highlights'],
+          ['أسلوب التصوير والتصميم والمحتوى','socialStyle']
+        ]},
+        { title:'المواد والملفات المتوفرة', fields:[
+          ['ملفات الشعار','availableLogo'],
+          ['الصور','availablePhotos'],
+          ['المنيو / الأسعار / المحتوى','availableMenu'],
+          ['التغليف والطباعة','availablePackaging'],
+          ['ملفات أخرى','availableOther']
+        ]},
+        { title:'المنافسون والمراجع', fields:[
+          ['أهم المنافسين','competitors'],
+          ['منافسون تعجبك هويتهم','competitorLikes'],
+          ['أساليب لا تريد مشابهتها','competitorAvoid']
+        ]},
+        { title:'هدف الهوية الجديدة', fields:[
+          ['أهداف الهوية','goal'],
+          ['هدف إضافي','goalOther'],
+          ['تعريف النجاح','successDefinition']
+        ]},
+        { title:'المدة والميزانية', fields:[
+          ['موعد التسليم المطلوب','deadline'],
+          ['الميزانية التقريبية','budget'],
+          ['الأولويات','scopePriority']
+        ]},
+        { title:'ملاحظات واعتماد المعلومات', fields:[
+          ['ملاحظات إضافية','extraNotes'],
+          ['اسم الشخص','clientName'],
+          ['رقم التواصل','clientContact'],
+          ['التأكيد','confirmation']
+        ]}
+      ];
+
+      function getGroupValues(name){
+        return [...form.querySelectorAll('[name="' + name + '"]:checked')].map(el => el.value);
+      }
+
+      function getValue(name){
+        const elements = [...form.querySelectorAll('[name="' + name + '"]')];
+        if(!elements.length) return '';
+        const first = elements[0];
+        if(first.type === 'checkbox'){
+          return getGroupValues(name).join('، ');
+        }
+        if(first.type === 'radio'){
+          const checked = form.querySelector('[name="' + name + '"]:checked');
+          return checked ? checked.value : '';
+        }
+        return first.value.trim();
+      }
+
+      function groupIsValid(wrap){
+        const name = wrap.dataset.requiredGroup;
+        if(name === 'confirmation'){
+          return !!form.querySelector('[name="confirmation"]:checked');
+        }
+        return form.querySelectorAll('[name="' + name + '"]:checked').length > 0;
+      }
+
+      function clearErrors(scope){
+        [...scope.querySelectorAll('.has-error')].forEach(el => el.classList.remove('has-error'));
+        [...scope.querySelectorAll('.group-wrap.invalid')].forEach(el => el.classList.remove('invalid'));
+      }
+
+      function validateStep(stepEl){
+        clearErrors(stepEl);
+        let firstInvalid = null;
+
+        [...stepEl.querySelectorAll('input[required], textarea[required], select[required]')].forEach(el => {
+          if(!el.value.trim() && !['checkbox','radio'].includes(el.type)){
+            const field = el.closest('.field');
+            if(field){
+              field.classList.add('has-error');
+              firstInvalid ||= el;
+            }
+          }
+        });
+
+        [...stepEl.querySelectorAll('input[type="radio"][required]')].forEach(el => {
+          const name = el.name;
+          const checked = stepEl.querySelector('[name="' + name + '"]:checked');
+          if(!checked){
+            const field = el.closest('.field');
+            if(field){
+              field.classList.add('has-error');
+              firstInvalid ||= el;
+            }
+          }
+        });
+
+        [...stepEl.querySelectorAll('.group-wrap[data-required-group]')].forEach(wrap => {
+          if(!groupIsValid(wrap)){
+            wrap.classList.add('invalid');
+            if(!firstInvalid) firstInvalid = wrap.querySelector('input');
+          }
+        });
+
+        if(firstInvalid){
+          firstInvalid.scrollIntoView({behavior:'smooth', block:'center'});
+          if(firstInvalid.focus) firstInvalid.focus({preventScroll:true});
+          return false;
+        }
+        return true;
+      }
+
+      function updateProgress(){
+        const pct = Math.round(((current - 1) / (TOTAL - 1)) * 100);
+        barFill.style.width = pct + '%';
+        progressTitle.textContent = 'القسم ' + current + ' من ' + TOTAL;
+        progressPercent.textContent = pct + '%';
+      }
+
+      function showStep(num){
+        current = Math.max(1, Math.min(TOTAL, num));
+        steps.forEach(step => step.classList.toggle('active', Number(step.dataset.step) === current));
+        updateProgress();
+        successBox.style.display = 'none';
+        window.scrollTo({top:0, behavior:'smooth'});
+        if(current === TOTAL) buildReview();
+      }
+
+      function buildReview(){
+        let html = '';
+        sections.forEach((section, idx) => {
+          html += '<div class="review-section">';
+          html += '<h3>' + (idx+1).toString().padStart(2,'0') + ' — ' + escapeHTML(section.title) + '</h3>';
+          section.fields.forEach(([q,name]) => {
+            let val = getValue(name);
+            if(name === 'confirmation'){
+              val = form.querySelector('[name="confirmation"]:checked') ? 'تم التأكيد' : 'لم يتم التأكيد';
+            }
+            if(!val) val = '—';
+            html += '<div class="review-item">';
+            html += '<div class="review-q">' + escapeHTML(q) + '</div>';
+            html += '<div class="review-a">' + escapeHTML(val) + '</div>';
+            html += '</div>';
+          });
+          html += '</div>';
+        });
+        reviewBox.innerHTML = html;
+      }
+
+      function escapeHTML(value){
+        return String(value)
+          .replaceAll('&','&amp;')
+          .replaceAll('<','&lt;')
+          .replaceAll('>','&gt;')
+          .replaceAll('"','&quot;')
+          .replaceAll("'","&#039;");
+      }
+
+      // إنشاء رسالة واحدة تجمع جميع الأقسام.
+      // كل سؤال والجواب تحته، وبين كل قسم خط فاصل واضح.
+      function buildWhatsAppMessage(){
+        const lines = [];
+        lines.push('📋 استبيان معلومات الهوية البصرية');
+        lines.push('');
+
+        sections.forEach((section, idx) => {
+          lines.push('━━━━━━━━━━━━━━━━━━━━');
+          lines.push('【' + String(idx + 1).padStart(2,'0') + '】 ' + section.title);
+          lines.push('━━━━━━━━━━━━━━━━━━━━');
+
+          section.fields.forEach(([q, name]) => {
+            let val = getValue(name);
+            if(name === 'confirmation'){
+              val = form.querySelector('[name="confirmation"]:checked') ? 'تم التأكيد' : 'لم يتم التأكيد';
+            }
+            if(!val) val = '—';
+
+            lines.push(q);
+            lines.push('الجواب: ' + String(val));
+            lines.push('');
+          });
+        });
+
+        return lines.join('\n').trim();
+      }
+
+      function openWhatsApp(message, phone){
+        const url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(message);
+        window.open(url, '_blank', 'noopener,noreferrer');
+      }
+
+      // زر التالي
+      document.querySelectorAll('.next').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const stepEl = steps[current - 1];
+          if(validateStep(stepEl)){
+            showStep(current + 1);
+          }
+        });
+      });
+
+      // زر السابق
+      document.querySelectorAll('.prev').forEach(btn => {
+        btn.addEventListener('click', () => showStep(current - 1));
+      });
+
+      // إزالة التنبيه بمجرد تعديل الحقل
+      form.addEventListener('input', e => {
+        const field = e.target.closest('.field');
+        if(field && e.target.value.trim()){
+          field.classList.remove('has-error');
+        }
+      });
+
+      form.addEventListener('change', e => {
+        const wrap = e.target.closest('.group-wrap');
+        if(wrap && groupIsValid(wrap)){
+          wrap.classList.remove('invalid');
+        }
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        for(let i = 0; i < TOTAL; i++){
+          showStep(i + 1);
+          if(!validateStep(steps[i])){
+            return;
+          }
+        }
+
+        buildReview();
+
+        const message = buildWhatsAppMessage();
+        const phone = '963984123234';
+
+        sendBtn.disabled = true;
+        sendBtn.textContent = 'جاري فتح واتساب…';
+
+        openWhatsApp(message, phone);
+
+        successBox.style.display = 'block';
+        successBox.textContent = 'تم تجهيز جميع المعلومات في رسالة واحدة مرتبة، مع خط فاصل واضح بين كل قسم.';
+
+        sendBtn.disabled = false;
+        sendBtn.textContent = 'إرسال عبر واتساب';
+      });
+
+      // تحديث أولي
+      updateProgress();
+    })();
+  </script>
+</body>
+</html>
